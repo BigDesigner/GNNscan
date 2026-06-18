@@ -88,3 +88,39 @@ jobs:
           name: GNNscan-iOS-Bundle
           path: GNNscan_iOS_Bundle.zip
           if-no-files-found: error
+
+  build-macos:
+    name: Build macOS App
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Run Tests
+        run: flutter test
+
+      - name: Build macOS Application
+        run: flutter build macos --release --no-codesign
+
+      - name: Zip macOS App Bundle
+        run: |
+          cd build/macos/Build/Products/Release
+          zip -r ../../../../../GNNscan_macOS.zip *.app
+
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GNNscan-macOS-App
+          path: GNNscan_macOS.zip
+          if-no-files-found: error
