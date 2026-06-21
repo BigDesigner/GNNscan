@@ -51,17 +51,23 @@ begin
             RegQueryStringValue(HKCU, RegPath, 'pv', InstalledVersion);
 end;
 
-function InitializeSetup: Boolean;
+function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
-  ErrorCode: Integer;
+  ResultCode: Integer;
 begin
-  Result := True;
+  Result := '';
   if not IsWebView2Installed then
   begin
-    if MsgBox('GNNscan requires Microsoft Edge WebView2 Runtime to render the dashboard interface. It does not appear to be installed.' + #13#10#13#10 +
-              'Would you like to download and install it now?', mbConfirmation, MB_YESNO) = IDYES then
-    begin
-      ShellExec('open', 'https://developer.microsoft.com/en-us/microsoft-edge/webview2/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+    WizardForm.StatusLabel.Caption := 'Downloading Microsoft Edge WebView2 Runtime...';
+    try
+      DownloadTemporaryFile('https://go.microsoft.com/fwlink/p/?LinkId=2124703', 'MicrosoftEdgeWebview2Setup.exe', '', nil);
+      WizardForm.StatusLabel.Caption := 'Installing Microsoft Edge WebView2 Runtime (silent)...';
+      if not Exec(ExpandConstant('{tmp}\MicrosoftEdgeWebview2Setup.exe'), '/silent /install', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+      begin
+        MsgBox('Microsoft Edge WebView2 Runtime installation failed. You can install it manually from Microsoft website.', mbInformation, MB_OK);
+      end;
+    except
+      MsgBox('Failed to download WebView2 Runtime automatically. You can install it manually.', mbInformation, MB_OK);
     end;
   end;
 end;
