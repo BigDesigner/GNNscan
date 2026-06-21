@@ -583,7 +583,7 @@
                             </div>
                             <div class="space-y-5">
                                 <div class="flex justify-between items-end">
-                                    <label class="font-data-mono text-label-xs text-on-surface-variant uppercase tracking-wider">IO_TIMEOUT (MS)</label>
+                                    <label class="font-data-mono text-label-xs text-on-surface-variant uppercase tracking-wider">SCAN_TIMEOUT (MS)</label>
                                     <span id="val-timeout" class="font-data-mono-bold text-primary-container text-data-mono">500</span>
                                 </div>
                                 <input id="cfg-timeout" class="w-full h-1.5 bg-surface-container accent-primary-container cursor-pointer appearance-none rounded-full" max="3000" min="100" step="50" type="range" value="500" oninput="document.getElementById('val-timeout').textContent=this.value"/>
@@ -687,6 +687,15 @@
         let selectedHostIp = null;
         let hostsData = {}; // Stores key: hostIp, value: {ip, label, isUp, ports: []}
         let historyData = [];
+
+        // Bridge object for Flutter calls
+        window.gnnscan = {
+            onLogReceived: (timestamp, type, msg) => addLog(timestamp, type, msg),
+            onHostDiscovered: (ip, label, isUp) => addHostDiscovered(ip, label, isUp),
+            onPortDiscovered: (ip, port, protocol, state, service, version, vulnScore, vulnLevel) => addPortDiscovered(ip, port, protocol, state, service, version, vulnScore, vulnLevel),
+            onProgressUpdate: (progress) => onProgressUpdate(progress),
+            onScanFinished: () => onScanFinished()
+        };
 
         // UI Tabs switching
         function switchView(viewName) {
@@ -1151,7 +1160,7 @@
                 }
 
                 html += `
-                <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="loadHistoryItemToActive('${item.target}')">
+                <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="loadHistoryItemToActive('${item.target}', '${item.timestamp}')">
                     <td class="p-2 border-r border-outline-variant/20">
                         <div class="flex flex-col">
                             <span class="text-primary-container font-bold">${item.target}</span>
@@ -1169,9 +1178,9 @@
         }
 
         // Click history item: load it back to scan-results for inspection!
-        function loadHistoryItemToActive(target) {
+        function loadHistoryItemToActive(target, timestamp) {
             // Find history item
-            const item = historyData.find(h => h.target === target);
+            const item = historyData.find(h => h.target === target && h.timestamp === timestamp);
             if (!item || !item.resultData) return;
 
             // Load host details into Active view
