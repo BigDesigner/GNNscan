@@ -943,8 +943,11 @@
                 <li>
                     <div onclick="selectHost('${ip}')" class="flex items-center justify-between py-1.5 px-3 ${activeClasses}">
                         <div class="flex items-center space-x-3">
-                            <div class="w-1.5 h-1.5 ${statusDot} rounded-full"></div>
-                            <span>${host.ip}</span>
+                            <div class="w-1.5 h-1.5 ${statusDot} rounded-full shrink-0"></div>
+                            <div class="flex flex-col">
+                                <span class="leading-tight">${host.ip}</span>
+                                ${host.vendor && host.vendor !== 'UNKNOWN' ? `<span class="text-[9px] text-outline leading-none mt-0.5">${host.vendor}</span>` : ''}
+                            </div>
                         </div>
                         <span class="text-[10px] ${tagColor}">${tag}</span>
                     </div>
