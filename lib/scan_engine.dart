@@ -63,12 +63,13 @@ class ScanEngine {
         tasks: ipList,
         worker: (ip) async {
           if (_isAborted) return;
+          _log('INFO', 'Sweeping target: $ip');
           bool isUp = await _pingHost(ip);
           completedHosts++;
           onProgress((completedHosts / ipList.length) * 30.0); // Host discovery occupies first 30% of progress
 
           if (isUp) {
-            _log('COMM', 'Host found active: $ip');
+            _log('COMM', 'Host responds active: $ip');
             activeHosts.add(ip);
             onHostDiscovered(ip, 'ACTIVE_NODE', true);
           } else {
@@ -114,6 +115,7 @@ class ScanEngine {
           final String ip = task['ip'];
           final int port = task['port'];
 
+          _log('INFO', 'Probing target: $ip:$port');
           await _scanPort(ip, port);
 
           completedPortTasks++;
@@ -265,6 +267,7 @@ class ScanEngine {
         socket.destroy();
       }
 
+      _log('COMM', 'Open port detected: $ip:$port ($service)');
       onPortDiscovered(ip, port, 'TCP', 'open', service, version, vulnScore, vulnLevel);
     } on SocketException catch (e) {
       if (e.osError?.errorCode == 1225 || e.osError?.errorCode == 61 || e.message.contains('Connection refused')) {
