@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
   pull_request:
     branches:
       - main
@@ -15,6 +13,39 @@ permissions:
   contents: write
 
 jobs:
+  check-version:
+    name: Check version and release status
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.parse.outputs.version }}
+      release_needed: ${{ steps.check-tag.outputs.release_needed }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parse CHANGELOG.md
+        id: parse
+        run: python scripts/parse_changelog.py
+
+      - name: Check if tag exists
+        id: check-tag
+        run: |
+          TAG_NAME="${{ steps.parse.outputs.version }}"
+          if [ -z "$TAG_NAME" ]; then
+            echo "Error: No version detected in CHANGELOG.md."
+            echo "release_needed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Tag $TAG_NAME already exists. Skipping release creation."
+            echo "release_needed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Tag $TAG_NAME does not exist. A new release is needed."
+            echo "release_needed=true" >> $GITHUB_OUTPUT
+          fi
+
   build-windows:
     name: Build Windows App & Installer
     runs-on: windows-latest
@@ -132,13 +163,26 @@ jobs:
 
   release:
     name: Create GitHub Release
-    needs: [build-windows, build-ios, build-macos]
+    needs: [check-version, build-windows, build-ios, build-macos]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && needs.check-version.outputs.release_needed == 'true'
     
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Parse CHANGELOG.md for release notes
+        run: python scripts/parse_changelog.py
+        
+      - name: Create and Push Git Tag
+        run: |
+          TAG_NAME="${{ needs.check-version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG_NAME"
+          git push origin "$TAG_NAME"
         
       - name: Download Windows Installer
         uses: actions/download-artifact@v4
@@ -161,6 +205,9 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.check-version.outputs.version }}
+          name: GNNscan ${{ needs.check-version.outputs.version }}
+          body_path: release_notes.txt
           files: |
             GNNscan_Setup.exe
             GNNscan_iOS_Bundle.zip
