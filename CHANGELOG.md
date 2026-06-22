@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.6.6
+- **Zorunlu Tarama Modu (Nmap -Pn Benzeri):** Tekil ve statik harici IP adresleri veya alan adları girildiğinde, hedefin standart TCP Ping (Host Discovery) testini geçememesi durumunda taramanın iptal olması sorunu giderildi. Artık tekil hedefler Ping testinden düşse dahi (Güvenlik duvarı engellemesi vb.) "Up" (Açık) kabul edilerek port taramasına zorunlu olarak sokuluyor.
+- **Ağ Zaman Aşımı İyileştirmesi:** TCP Ping discovery zaman aşımı toleransı dış ağ taramaları için 300ms'den 500ms'ye çıkarıldı.
 ## v2.6.5
 - **Arayüz (UI) Geliştirmesi:** Sol paneldeki GNN Ecosystem logosu 150px genişliğinde, yüksekliği otomatik ayarlanacak şekilde orantısal olarak büyütüldü. Logoya tıklandığında uygulamanın resmi web sitesi (`https://gnn.tr`) varsayılan web tarayıcısında açılacak şekilde harici bağlantı özelliği eklendi.
 - **Sürüm Güncellemesi:** Uygulama genelinde sürüm değerleri 2.6.5 olarak senkronize edildi.

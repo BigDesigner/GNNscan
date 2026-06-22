@@ -75,6 +75,10 @@ class ScanEngine {
           // If already dynamic in ARP cache, it is up
           if (arpTable.containsKey(ip)) {
             isUp = true;
+          } else if (ipList.length == 1) {
+            // For single targets (especially external WAN IPs), we force 'up' state to ensure port scan runs regardless of ping block.
+            _log('INFO', 'Single target detected. Forcing active state (Skipping Ping Drop).');
+            isUp = true;
           } else {
             isUp = await _pingHost(ip);
           }
@@ -261,7 +265,7 @@ class ScanEngine {
     for (final port in commonPorts) {
       if (_isAborted) return false;
       try {
-        final socket = await Socket.connect(ip, port, timeout: const Duration(milliseconds: 300));
+        final socket = await Socket.connect(ip, port, timeout: const Duration(milliseconds: 500));
         socket.destroy();
         return true;
       } on SocketException catch (e) {
