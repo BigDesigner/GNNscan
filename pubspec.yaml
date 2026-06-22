@@ -2,7 +2,7 @@ name: gnnscan
 description: "A high-performance network scanning application targeting Windows and macOS."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 2.6.1+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

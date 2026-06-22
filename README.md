@@ -1,52 +1,52 @@
-# GNNscan
+﻿# GNNcyber - NETscan
 
-GNNscan, Flutter ve modern web teknolojileri ile geliştirilmiş, asenkron ve çok iş parçacıklı (multi-threaded) bir yerel ağ tarama (IP/Port Scan) ve keşif aracıdır.
-
----
-
-## 🚀 Temel Özellikler
-
-- **Dinamik Hedef Çözümleme:** Tekil IP, IP aralıkları (örn. `192.168.1.10-50`), CIDR Subnet tanımları (örn. `192.168.1.0/24`) ve alan adlarını otomatik olarak çözümler.
-- **Hızlı Asenkron Tarama:** Çoklu soket bağlantıları (varsayılan 64 thread) ile hedef sistemlerdeki açık portları saniyeler içinde tarar.
-- **ARP Tabanlı Host Keşfi:** Güvenlik duvarı (firewall) nedeniyle TCP ping isteklerine kapalı olan cihazları tespit etmek amacıyla yerel sistemin ARP önbelleğini (`arp -a`) dinamik olarak stimüle eder ve okur.
-- **MAC Adresi & Üretici (Vendor) Tespiti:** Aktif cihazların donanım (MAC) adreslerini ayıklar ve dinamik OUI sorgulaması ile üretici bilgilerini (örn. Synology, Apple, HP, Cisco) ekrana yansıtır.
-- **Web Arayüzü Yönlendirmesi:** Açık portlarda bir web yayını (80, 443, 5000, 8080 vb.) tespit edildiğinde port numarasının yanında beliren ikon yardımıyla ilgili cihazın web arayüzünü (örn. NAS cihazı veya yazıcı) kullanıcının varsayılan tarayıcısında otomatik olarak açar.
-- **Kalıcı Tarama Geçmişi:** Tarama ayarlarını ve geçmiş raporları yerel diskte JSON tabanlı bir veritabanında saklar.
-- **Brutalist Terminal Log Akışı:** Arka planda gerçekleşen tarama adımlarını ve soket hareketlerini canlı terminal log penceresinde gösterir.
+GNNcyber - NETscan, Flutter ve modern web teknolojileri ile geliÅŸtirilmiÅŸ, asenkron ve Ã§ok iÅŸ parÃ§acÄ±klÄ± (multi-threaded) bir yerel aÄŸ tarama (IP/Port Scan) ve keÅŸif aracÄ±dÄ±r.
 
 ---
 
-## 🛠️ Teknoloji Yığını
+## ğŸš€ Temel Ã–zellikler
+
+- **Dinamik Hedef Ã‡Ã¶zÃ¼mleme:** Tekil IP, IP aralÄ±klarÄ± (Ã¶rn. `192.168.1.10-50`), CIDR Subnet tanÄ±mlarÄ± (Ã¶rn. `192.168.1.0/24`) ve alan adlarÄ±nÄ± otomatik olarak Ã§Ã¶zÃ¼mler.
+- **HÄ±zlÄ± Asenkron Tarama:** Ã‡oklu soket baÄŸlantÄ±larÄ± (varsayÄ±lan 64 thread) ile hedef sistemlerdeki aÃ§Ä±k portlarÄ± saniyeler iÃ§inde tarar.
+- **ARP TabanlÄ± Host KeÅŸfi:** GÃ¼venlik duvarÄ± (firewall) nedeniyle TCP ping isteklerine kapalÄ± olan cihazlarÄ± tespit etmek amacÄ±yla yerel sistemin ARP Ã¶nbelleÄŸini (`arp -a`) dinamik olarak stimÃ¼le eder ve okur.
+- **MAC Adresi & Ãœretici (Vendor) Tespiti:** Aktif cihazlarÄ±n donanÄ±m (MAC) adreslerini ayÄ±klar ve dinamik OUI sorgulamasÄ± ile Ã¼retici bilgilerini (Ã¶rn. Synology, Apple, HP, Cisco) ekrana yansÄ±tÄ±r.
+- **Web ArayÃ¼zÃ¼ YÃ¶nlendirmesi:** AÃ§Ä±k portlarda bir web yayÄ±nÄ± (80, 443, 5000, 8080 vb.) tespit edildiÄŸinde port numarasÄ±nÄ±n yanÄ±nda beliren ikon yardÄ±mÄ±yla ilgili cihazÄ±n web arayÃ¼zÃ¼nÃ¼ (Ã¶rn. NAS cihazÄ± veya yazÄ±cÄ±) kullanÄ±cÄ±nÄ±n varsayÄ±lan tarayÄ±cÄ±sÄ±nda otomatik olarak aÃ§ar.
+- **KalÄ±cÄ± Tarama GeÃ§miÅŸi:** Tarama ayarlarÄ±nÄ± ve geÃ§miÅŸ raporlarÄ± yerel diskte JSON tabanlÄ± bir veritabanÄ±nda saklar.
+- **Brutalist Terminal Log AkÄ±ÅŸÄ±:** Arka planda gerÃ§ekleÅŸen tarama adÄ±mlarÄ±nÄ± ve soket hareketlerini canlÄ± terminal log penceresinde gÃ¶sterir.
+
+---
+
+## ğŸ› ï¸ Teknoloji YÄ±ÄŸÄ±nÄ±
 
 - **Core:** Flutter (Dart 3.x)
-- **Arayüz:** HTML5, Modern CSS, Vanilla Javascript (SPA - Single Page Application yapısında birleştirilmiş Google Stitch tasarımı)
+- **ArayÃ¼z:** HTML5, Modern CSS, Vanilla Javascript (SPA - Single Page Application yapÄ±sÄ±nda birleÅŸtirilmiÅŸ Google Stitch tasarÄ±mÄ±)
 - **WebView:** `flutter_inappwebview` ile yerel HttpServer entegrasyonu
-- **Veri Depolama:** `path_provider` ile yerel JSON belgeleri (Geçmiş ve Ayarlar)
-- **Paketleyici:** Windows için Inno Setup kurulum sihirbazı (`setup.iss`)
+- **Veri Depolama:** `path_provider` ile yerel JSON belgeleri (GeÃ§miÅŸ ve Ayarlar)
+- **Paketleyici:** Windows iÃ§in Inno Setup kurulum sihirbazÄ± (`setup.iss`)
 
 ---
 
-## 📦 Kurulum ve Derleme
+## ğŸ“¦ Kurulum ve Derleme
 
 ### Gereksinimler
 - Flutter SDK
-- Windows Developer Mode (Sembolik link desteği ve derleme için gereklidir)
+- Windows Developer Mode (Sembolik link desteÄŸi ve derleme iÃ§in gereklidir)
 
-### Geliştirici Modunda Çalıştırma
+### GeliÅŸtirici Modunda Ã‡alÄ±ÅŸtÄ±rma
 ```bash
 flutter pub get
 flutter run
 ```
 
-### Windows Kurulum Dosyası (Installer) Üretimi
-Uygulama derlemesini alıp Inno Setup betiği ile paketlemek için:
+### Windows Kurulum DosyasÄ± (Installer) Ãœretimi
+Uygulama derlemesini alÄ±p Inno Setup betiÄŸi ile paketlemek iÃ§in:
 ```bash
 flutter build windows
-# setup.iss dosyasını Inno Setup derleyicisi ile açıp derleyerek GNNscan_Setup.exe dosyasını üretebilirsiniz.
+# setup.iss dosyasÄ±nÄ± Inno Setup derleyicisi ile aÃ§Ä±p derleyerek GNNcyber - NETscan_Setup.exe dosyasÄ±nÄ± Ã¼retebilirsiniz.
 ```
 
 ---
 
-## 🔒 Güvenlik ve Gizlilik
+## ğŸ”’ GÃ¼venlik ve Gizlilik
 
-Bu proje yerel ağ analizleri için tasarlanmıştır. ARP taraması veya port sorgulama işlemleri tamamen yerel cihaz üzerinden asenkron olarak gerçekleştirilir ve dış ağlara veri sızdırmaz.
+Bu proje yerel aÄŸ analizleri iÃ§in tasarlanmÄ±ÅŸtÄ±r. ARP taramasÄ± veya port sorgulama iÅŸlemleri tamamen yerel cihaz Ã¼zerinden asenkron olarak gerÃ§ekleÅŸtirilir ve dÄ±ÅŸ aÄŸlara veri sÄ±zdÄ±rmaz.

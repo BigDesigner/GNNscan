@@ -1,10 +1,10 @@
-; GNNscan - Inno Setup Installer Script
+﻿; GNNscan - Inno Setup Installer Script
 ; Targets compiled Windows Flutter executable and bundles WebView2 runtime check.
 
 [Setup]
 AppId={{C82F6D18-7F1F-43DE-875C-B24DE7AA9D2B}
-AppName=GNNscan
-AppVersion=2.4.0
+AppName=GNNcyber - NETscan
+AppVersion=2.6.1
 AppPublisher=BigDesigner
 AppPublisherURL=https://github.com/BigDesigner/GNNscan
 AppSupportURL=https://github.com/BigDesigner/GNNscan
@@ -13,7 +13,7 @@ DefaultDirName={autopf}\GNNscan
 DisableProgramGroupPage=yes
 LicenseFile=README.md
 OutputDir=.
-OutputBaseFilename=GNNscan_Setup
+OutputBaseFilename=GNNcyber_NETscan_Setup
 SetupIconFile=assets\app.ico
 Compression=lzma
 SolidCompression=yes
@@ -34,11 +34,11 @@ Source: "build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignorever
 ; NOTE: Don't use "Flags: ignoreversion" on shared system files
 
 [Icons]
-Name: "{autoprograms}\GNNscan"; Filename: "{app}\gnnscan.exe"
-Name: "{autodesktop}\GNNscan"; Filename: "{app}\gnnscan.exe"; Tasks: desktopicon
+Name: "{autoprograms}\GNNcyber - NETscan"; Filename: "{app}\gnnscan.exe"
+Name: "{autodesktop}\GNNcyber - NETscan"; Filename: "{app}\gnnscan.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\gnnscan.exe"; Description: "{cm:LaunchProgram,GNNscan}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\gnnscan.exe"; Description: "{cm:LaunchProgram,GNNcyber - NETscan}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 // Helper function to check if Edge WebView2 Runtime is installed

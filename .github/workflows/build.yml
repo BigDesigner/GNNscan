@@ -1,4 +1,4 @@
-name: GNNscan Build CI/CD
+﻿name: GNNscan Build CI/CD
 
 on:
   push:
@@ -94,8 +94,8 @@ jobs:
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GNNscan-Windows-Installer
-          path: GNNscan_Setup.exe
+          name: GNNcyber-NETscan-Windows-Installer
+          path: GNNcyber_NETscan_Setup.exe
           if-no-files-found: error
 
   build-macos:
@@ -129,13 +129,13 @@ jobs:
       - name: Zip macOS App Bundle
         run: |
           cd build/macos/Build/Products/Release
-          zip -r ../../../../../GNNscan_macOS.zip *.app
+          zip -r ../../../../../GNNcyber_NETscan_macOS.zip *.app
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GNNscan-macOS-App
-          path: GNNscan_macOS.zip
+          name: GNNcyber-NETscan-macOS-App
+          path: GNNcyber_NETscan_macOS.zip
           if-no-files-found: error
 
   release:
@@ -169,23 +169,23 @@ jobs:
       - name: Download Windows Installer
         uses: actions/download-artifact@v4
         with:
-          name: GNNscan-Windows-Installer
+          name: GNNcyber-NETscan-Windows-Installer
           path: ./
           
       - name: Download macOS App
         uses: actions/download-artifact@v4
         with:
-          name: GNNscan-macOS-App
+          name: GNNcyber-NETscan-macOS-App
           path: ./
           
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.check-version.outputs.version }}
-          name: GNNscan ${{ needs.check-version.outputs.version }}
+          name: GNNcyber - NETscan ${{  needs.check-version.outputs.version }}
           body_path: release_notes.txt
           files: |
-            GNNscan_Setup.exe
-            GNNscan_macOS.zip
+            GNNcyber_NETscan_Setup.exe
+            GNNcyber_NETscan_macOS.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
