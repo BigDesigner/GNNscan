@@ -411,7 +411,9 @@
                 </div>
                 <div class="flex gap-4 items-center mt-2 w-full">
                     <span class="font-data-mono text-label-xs text-outline">QUICK_PRESETS:</span>
-                    <button onclick="applyPreset('LOCAL_NET')" class="border border-outline-variant font-data-mono text-label-xs px-3 py-1 hover:border-primary hover:text-primary transition-all">LOCAL_NET</button>
+                    <select id="auto-subnet-select" onchange="if(this.value) { document.getElementById('scan-target').value = this.value; this.value = ''; }" class="bg-primary-container text-on-primary-fixed font-data-mono-bold text-[10px] px-3 py-1 outline-none border border-primary-container cursor-pointer transition-all uppercase hover:brightness-110 shadow-none appearance-none rounded-none text-center">
+                        <option value="" disabled selected>AUTO-DETECT SUBNET</option>
+                    </select>
                     <button onclick="applyPreset('CLOUD_ASSET')" class="border border-outline-variant font-data-mono text-label-xs px-3 py-1 hover:border-primary hover:text-primary transition-all">CLOUD_ASSET</button>
                     <button onclick="applyPreset('EXTERNAL_IP')" class="border border-outline-variant font-data-mono text-label-xs px-3 py-1 hover:border-primary hover:text-primary transition-all">EXTERNAL_IP</button>
                     
@@ -2021,11 +2023,29 @@
             }, 3500);
         }
 
+        function populateSubnets() {
+            if (window.flutter_inappwebview) {
+                window.flutter_inappwebview.callHandler('getLocalInterfaces').then(interfaces => {
+                    const select = document.getElementById('auto-subnet-select');
+                    if (select && interfaces) {
+                        interfaces.forEach(iface => {
+                            const option = document.createElement('option');
+                            option.value = iface.cidr;
+                            // Basic XSS mitigation: using textContent instead of innerHTML
+                            option.textContent = `${iface.name}: ${iface.cidr}`;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+            }
+        }
+
         window.onload = () => {
             initTelemetryStats();
             // Try loading settings from Dart
             setTimeout(loadSettingsFromDart, 1000);
             setTimeout(requestHistoryFromDart, 1000);
+            setTimeout(populateSubnets, 1500);
         };
     </script>
     <div id="toast-container" class="fixed bottom-6 right-6 flex flex-col gap-2 z-[200] pointer-events-none"></div>

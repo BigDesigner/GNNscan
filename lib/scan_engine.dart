@@ -309,8 +309,33 @@ class ScanEngine {
     return list;
   }
 
-  // Ping host using TCP Connect Ping to common ports
+  // Ping host using Hybrid Engine (ICMP Echo fallback to TCP Connect)
   Future<bool> _pingHost(String ip) async {
+    if (_isAborted) return false;
+
+    // SECURITY: Strict IP validation to prevent OS command injection
+    final ipRegex = RegExp(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$|^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$');
+    if (!ipRegex.hasMatch(ip)) {
+      _log('WARN', 'Invalid IP format detected: $ip. Skipping ping.');
+      return false;
+    }
+
+    // Stage 2: OS ICMP Ping
+    try {
+      final args = Platform.isWindows ? ['-n', '1', '-w', '400', ip] : ['-c', '1', '-W', '1', ip];
+      final result = await Process.run('ping', args);
+      if (result.exitCode == 0) {
+        _log('COMM', '[INFO] ICMP Echo Ping active for $ip');
+        return true;
+      }
+    } catch (e) {
+      // Ignored
+    }
+
+    if (_isAborted) return false;
+    _log('COMM', '[INFO] Fallback to TCP Connect Ping for $ip');
+
+    // Stage 3: TCP Connect Fallback
     final commonPorts = [80, 443, 22, 445, 139, 3389];
     for (final port in commonPorts) {
       if (_isAborted) return false;

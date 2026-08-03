@@ -11,6 +11,7 @@ import 'history_db.dart';
 import 'database_helper.dart';
 import 'scan_engine.dart';
 import 'update_service.dart';
+import 'network_interface_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -603,6 +604,17 @@ class _MainScreenState extends State<MainScreen> {
             _runJavaScript("window.netscan.onUpdateDownloadProgress($progress)");
           },
         );
+      },
+    );
+
+    // 14. getLocalInterfaces (Fetches local subnets via OS CLI/Dart and returns as safely encoded JSON array)
+    controller.addJavaScriptHandler(
+      handlerName: 'getLocalInterfaces',
+      callback: (args) async {
+        final interfaces = await NetworkInterfaceHelper.getLocalInterfaces();
+        final List<Map<String, dynamic>> jsonList = interfaces.map((e) => e.toJson()).toList();
+        // Return structured list to UI. The bridge handles JSON serialization securely.
+        return jsonList;
       },
     );
   }
