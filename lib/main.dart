@@ -597,6 +597,9 @@ class _MainScreenState extends State<MainScreen> {
     controller.addJavaScriptHandler(
       handlerName: 'downloadAndInstallUpdate',
       callback: (args) async {
+        if (args.isEmpty || args[0] is! String) {
+          return {'success': false, 'error': 'Invalid arguments'};
+        }
         final downloadUrl = args[0] as String;
         return await UpdateService.downloadAndInstall(
           downloadUrl,

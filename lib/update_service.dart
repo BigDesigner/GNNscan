@@ -110,6 +110,27 @@ class UpdateService {
     return false;
   }
 
+  // SECURITY: Whitelist URL validation to prevent Remote Code Execution (RCE) / Arbitrary File Download
+  static bool isValidUpdateUrl(String downloadUrl) {
+    try {
+      final uri = Uri.parse(downloadUrl);
+      if (uri.scheme != 'https' || uri.host.toLowerCase() != 'github.com') {
+        return false;
+      }
+      final expectedPathPrefix = '/$_kRepoOwner/$_kRepoName/releases/download/';
+      if (!uri.path.startsWith(expectedPathPrefix)) {
+        return false;
+      }
+      final expectedExt = Platform.isWindows ? '.exe' : Platform.isMacOS ? '.zip' : '';
+      if (expectedExt.isNotEmpty && !uri.path.toLowerCase().endsWith(expectedExt)) {
+        return false;
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   // Downloads the installer asset to a temp file, reporting progress via [onProgress] (0-100).
   // On Windows the installer is launched directly and this process then exits so the
   // installer can overwrite files currently held open by the running app.
@@ -118,6 +139,13 @@ class UpdateService {
     String downloadUrl, {
     required void Function(double) onProgress,
   }) async {
+    if (!isValidUpdateUrl(downloadUrl)) {
+      return {
+        'success': false,
+        'error': 'Security Exception: Invalid or untrusted update download URL.',
+      };
+    }
+
     final client = HttpClient();
     client.connectionTimeout = const Duration(seconds: 5);
     try {
