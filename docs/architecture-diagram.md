@@ -1,4 +1,4 @@
-# GNNcyber - NETscan Mimari ve Veri Akış Diyagramı (v2.14.0)
+# GNNcyber - NETscan Mimari ve Veri Akış Diyagramı (v2.15.0)
 
 Bu belgede GNNcyber - NETscan uygulamasının **Ön Yüz (Webview)**, **Dart Köprüsü (Bridge)** ve **Tarama Motoru (Core Scan Engine)** bileşenleri arasındaki veri akışları ile mimari katmanları görselleştirilmiştir.
 

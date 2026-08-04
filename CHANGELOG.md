@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.15.0
+**Auto-Detect Subnet, Hybrid ICMP Ping & Update Security Hardening / Otomatik Alt Ağ Tespiti, Hibrit ICMP Ping ve Güncelleme Güvenliği Sıkılaştırması**
+- Added an auto-detect subnet dropdown that lists the machine's real network adapters (queried via OS interface info with a pure-Dart fallback) so users no longer have to guess their local CIDR range.
+  - *Makinenin gerçek ağ adaptörlerini listeleyen (işletim sistemi arayüz bilgisiyle, saf Dart yedeğiyle) bir otomatik alt ağ tespit menüsü eklendi; kullanıcılar artık yerel CIDR aralığını tahmin etmek zorunda değil.*
+- Host discovery now tries a real OS-level ICMP echo ping first, falling back to the existing TCP-connect probe only if ICMP is blocked or fails, improving detection accuracy on networks that filter the probed TCP ports.
+  - *Cihaz keşfi artık önce gerçek bir işletim sistemi seviyesinde ICMP echo ping dener, yalnızca ICMP engellenirse veya başarısız olursa mevcut TCP-connect yöntemine döner; bu da denenen TCP portlarını filtreleyen ağlarda tespit doğruluğunu artırır.*
+- Hardened the update installer against a theoretical remote-code-execution path: `downloadAndInstall` now validates the download URL against a strict allow-list (must be `https://github.com/<this repo>/releases/download/...` with the expected file extension) before downloading or executing anything.
+  - *Güncelleme kurulumu, teorik bir uzaktan kod çalıştırma (RCE) yoluna karşı sıkılaştırıldı: `downloadAndInstall` artık herhangi bir şey indirmeden veya çalıştırmadan önce indirme URL'sini katı bir izin listesine (`https://github.com/<bu depo>/releases/download/...` ve beklenen dosya uzantısı) göre doğruluyor.*
+
 ## v2.14.0
 **Clean Break: Legacy Identifiers Removed / Temiz Kesim: Eski Tanımlayıcılar Kaldırıldı**
 - Removed the previous version's temporary migration and installer cleanup steps for the old internal identifier. This is a clean-slate release: no legacy references remain anywhere in the codebase, but pre-rename local data/shortcuts from very old installs are no longer auto-migrated.
