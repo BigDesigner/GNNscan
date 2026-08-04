@@ -356,7 +356,7 @@ class _MainScreenState extends State<MainScreen> {
         try {
           final logsText = args[0] as String;
           final fileName = 'netscan_terminal_logs_${DateTime.now().millisecondsSinceEpoch}.txt';
-          final savePath = await FilePicker.platform.saveFile(
+          final savePath = await FilePicker.saveFile(
             dialogTitle: 'Save Terminal Logs',
             fileName: fileName,
             type: FileType.custom,
@@ -383,7 +383,7 @@ class _MainScreenState extends State<MainScreen> {
           
           if (format == 'json') {
             final fileName = 'netscan_export_$timeStamp.json';
-            final savePath = await FilePicker.platform.saveFile(
+            final savePath = await FilePicker.saveFile(
               dialogTitle: 'Export History (JSON)',
               fileName: fileName,
               type: FileType.custom,
@@ -442,7 +442,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             );
             final fileName = 'GNNcyber_History_$timeStamp.pdf';
-            final savePath = await FilePicker.platform.saveFile(
+            final savePath = await FilePicker.saveFile(
               dialogTitle: 'Export History (PDF)',
               fileName: fileName,
               type: FileType.custom,
@@ -455,7 +455,7 @@ class _MainScreenState extends State<MainScreen> {
           } else {
             // CSV
             final fileName = 'netscan_export_$timeStamp.csv';
-            final savePath = await FilePicker.platform.saveFile(
+            final savePath = await FilePicker.saveFile(
               dialogTitle: 'Export History (CSV)',
               fileName: fileName,
               type: FileType.custom,
@@ -506,7 +506,7 @@ class _MainScreenState extends State<MainScreen> {
           final fileName = args[0] as String;
           final content = args[1] as String;
           final ext = fileName.contains('.') ? fileName.split('.').last : '';
-          final savePath = await FilePicker.platform.saveFile(
+          final savePath = await FilePicker.saveFile(
             dialogTitle: 'Save Scan Export',
             fileName: fileName,
             type: ext.isNotEmpty ? FileType.custom : FileType.any,
@@ -615,7 +615,7 @@ class _MainScreenState extends State<MainScreen> {
           final cleanTarget = target.replaceAll(RegExp(r'[^a-zA-Z0-9.-]'), '_');
           final cleanTime = timestamp.replaceAll(RegExp(r'[^0-9]'), '_');
           final fileName = 'GNNcyber_NETscan_details_${cleanTarget}_$cleanTime.pdf';
-          final savePath = await FilePicker.platform.saveFile(
+          final savePath = await FilePicker.saveFile(
             dialogTitle: 'Save Single Scan Report (PDF)',
             fileName: fileName,
             type: FileType.custom,
