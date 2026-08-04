@@ -1717,6 +1717,12 @@
                     p.className = 'font-data-mono text-label-xs text-error';
                     p.textContent = 'Update failed: ' + (result && result.error ? result.error : 'Unknown error');
                     statusArea.appendChild(p);
+                } else if (result.message) {
+                    statusArea.innerHTML = '';
+                    const p = document.createElement('p');
+                    p.className = 'font-data-mono text-label-xs text-primary-container font-bold border border-primary-container/40 p-2.5 bg-primary-container/10';
+                    p.textContent = result.message;
+                    statusArea.appendChild(p);
                 }
                 // On success (Windows) the installer launches and this app exits automatically.
             }).catch(() => {

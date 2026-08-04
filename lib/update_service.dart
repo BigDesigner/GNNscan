@@ -186,9 +186,30 @@ class UpdateService {
         return {'success': true};
       } else if (Platform.isMacOS) {
         final extractDir = '${tempDir.path}${Platform.pathSeparator}netscan_update_extracted';
-        await Process.run('unzip', ['-o', filePath, '-d', extractDir]);
-        await Process.run('open', [extractDir]);
-        return {'success': true};
+        final extractFolder = Directory(extractDir);
+        if (!await extractFolder.exists()) {
+          await extractFolder.create(recursive: true);
+        }
+
+        bool unzipped = false;
+        try {
+          final res = await Process.run('unzip', ['-o', filePath, '-d', extractDir]);
+          if (res.exitCode == 0) unzipped = true;
+        } catch (_) {}
+
+        try {
+          if (unzipped) {
+            await Process.run('open', [extractDir]);
+          } else {
+            // Fallback: Open zip file directly via macOS native Archive Utility
+            await Process.run('open', [filePath]);
+          }
+        } catch (_) {}
+
+        return {
+          'success': true,
+          'message': 'UPDATE DOWNLOADED! File opened in Finder. Please drag the new version to Applications.',
+        };
       } else {
         return {'success': false, 'error': 'Automatic installation is not supported on this platform.'};
       }
