@@ -2,7 +2,7 @@ name: netscan
 description: "A high-performance network scanning application targeting Windows and macOS."
 publish_to: 'none'
 
-version: 2.15.0+350
+version: 2.16.0+360
 
 environment:
   sdk: '>=3.12.0 <4.0.0'

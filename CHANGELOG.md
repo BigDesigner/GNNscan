@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.16.0
+**Interactive Save Dialogs & macOS Update Fix / İnteraktif Dosya Kaydetme Penceresi ve macOS Güncelleme Düzeltmesi**
+- PDF, JSON, CSV and Terminal Log exports now open an interactive Save File Dialog (`FilePicker.saveFile`) allowing users to choose the save location while retaining auto-suggested file names.
+  - *PDF, JSON, CSV ve Terminal Log çıktıları artık kullanıcıya kaydedilecek dizini seçme imkanı tanıyan ve dosya adını otomatik öneren interaktif Dosya Kaydetme Penceresi (`FilePicker.saveFile`) açar.*
+- Fixed macOS update installation where the progress modal remained stuck at 100%: added native macOS Archive Utility fallback extraction and updated the UI to show completion guidance.
+  - *macOS güncelleme kurulumunda ilerleme modalının %100'de takılı kalma sorunu düzeltildi: yerel macOS Archive Utility yedek çıkarma desteği eklendi ve kullanıcıya yönlendirme gösteren arayüz mesajı güncellendi.*
+
 ## v2.15.0
 **Auto-Detect Subnet, Hybrid ICMP Ping & Update Security Hardening / Otomatik Alt Ağ Tespiti, Hibrit ICMP Ping ve Güncelleme Güvenliği Sıkılaştırması**
 - Added an auto-detect subnet dropdown that lists the machine's real network adapters (queried via OS interface info with a pure-Dart fallback) so users no longer have to guess their local CIDR range.
