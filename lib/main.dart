@@ -12,6 +12,7 @@ import 'database_helper.dart';
 import 'scan_engine.dart';
 import 'update_service.dart';
 import 'network_interface_helper.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -348,14 +349,21 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
 
-    // 7. saveLogs (Saves terminal logs to text file)
+    // 7. saveLogs (Saves terminal logs to text file using save dialog)
     controller.addJavaScriptHandler(
       handlerName: 'saveLogs',
       callback: (args) async {
         try {
           final logsText = args[0] as String;
-          final directory = await getApplicationDocumentsDirectory();
-          final file = File('${directory.path}/netscan_terminal_logs_${DateTime.now().millisecondsSinceEpoch}.txt');
+          final fileName = 'netscan_terminal_logs_${DateTime.now().millisecondsSinceEpoch}.txt';
+          final savePath = await FilePicker.platform.saveFile(
+            dialogTitle: 'Save Terminal Logs',
+            fileName: fileName,
+            type: FileType.custom,
+            allowedExtensions: ['txt'],
+          );
+          if (savePath == null) return null;
+          final file = File(savePath);
           await file.writeAsString(logsText);
           return file.path;
         } catch (e) {
@@ -364,17 +372,25 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
 
-    // 8. exportHistory (Exports history to CSV or JSON file)
+    // 8. exportHistory (Exports history to CSV, JSON, or PDF file with save dialog)
     controller.addJavaScriptHandler(
       handlerName: 'exportHistory',
       callback: (args) async {
         try {
           final format = args[0] as String;
           final history = await HistoryDb.loadHistory();
-          final directory = await getApplicationDocumentsDirectory();
+          final timeStamp = DateTime.now().millisecondsSinceEpoch;
           
           if (format == 'json') {
-            final file = File('${directory.path}/netscan_export_${DateTime.now().millisecondsSinceEpoch}.json');
+            final fileName = 'netscan_export_$timeStamp.json';
+            final savePath = await FilePicker.platform.saveFile(
+              dialogTitle: 'Export History (JSON)',
+              fileName: fileName,
+              type: FileType.custom,
+              allowedExtensions: ['json'],
+            );
+            if (savePath == null) return null;
+            final file = File(savePath);
             await file.writeAsString(jsonEncode(history), flush: true);
             return file.path;
           } else if (format == 'pdf') {
@@ -425,12 +441,28 @@ class _MainScreenState extends State<MainScreen> {
                 },
               ),
             );
-            final file = File('${directory.path}/GNNcyber_History_${DateTime.now().millisecondsSinceEpoch}.pdf');
+            final fileName = 'GNNcyber_History_$timeStamp.pdf';
+            final savePath = await FilePicker.platform.saveFile(
+              dialogTitle: 'Export History (PDF)',
+              fileName: fileName,
+              type: FileType.custom,
+              allowedExtensions: ['pdf'],
+            );
+            if (savePath == null) return null;
+            final file = File(savePath);
             await file.writeAsBytes(await pdfDoc.save(), flush: true);
             return file.path;
           } else {
             // CSV
-            final file = File('${directory.path}/netscan_export_${DateTime.now().millisecondsSinceEpoch}.csv');
+            final fileName = 'netscan_export_$timeStamp.csv';
+            final savePath = await FilePicker.platform.saveFile(
+              dialogTitle: 'Export History (CSV)',
+              fileName: fileName,
+              type: FileType.custom,
+              allowedExtensions: ['csv'],
+            );
+            if (savePath == null) return null;
+            final file = File(savePath);
             final csvBuffer = StringBuffer();
             csvBuffer.writeln('Target,Module,Timestamp,DurationMs,FindingsCount,Status,OperatorHost');
             for (var item in history) {
@@ -466,15 +498,22 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
 
-    // 10. saveExportFile (Saves single scan details export files to Documents directory)
+    // 10. saveExportFile (Saves single scan details export files with save dialog)
     controller.addJavaScriptHandler(
       handlerName: 'saveExportFile',
       callback: (args) async {
         try {
           final fileName = args[0] as String;
           final content = args[1] as String;
-          final directory = await getApplicationDocumentsDirectory();
-          final file = File('${directory.path}/$fileName');
+          final ext = fileName.contains('.') ? fileName.split('.').last : '';
+          final savePath = await FilePicker.platform.saveFile(
+            dialogTitle: 'Save Scan Export',
+            fileName: fileName,
+            type: ext.isNotEmpty ? FileType.custom : FileType.any,
+            allowedExtensions: ext.isNotEmpty ? [ext] : null,
+          );
+          if (savePath == null) return null;
+          final file = File(savePath);
           await file.writeAsString(content, flush: true);
           return file.path;
         } catch (_) {
@@ -483,7 +522,7 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
 
-    // 11. exportSingleScanPdf (Generates professional PDF for a single scan)
+    // 11. exportSingleScanPdf (Generates professional PDF for a single scan with save dialog)
     controller.addJavaScriptHandler(
       handlerName: 'exportSingleScanPdf',
       callback: (args) async {
@@ -573,10 +612,17 @@ class _MainScreenState extends State<MainScreen> {
             ),
           );
           
-          final directory = await getApplicationDocumentsDirectory();
           final cleanTarget = target.replaceAll(RegExp(r'[^a-zA-Z0-9.-]'), '_');
           final cleanTime = timestamp.replaceAll(RegExp(r'[^0-9]'), '_');
-          final file = File('${directory.path}/GNNcyber_NETscan_details_${cleanTarget}_$cleanTime.pdf');
+          final fileName = 'GNNcyber_NETscan_details_${cleanTarget}_$cleanTime.pdf';
+          final savePath = await FilePicker.platform.saveFile(
+            dialogTitle: 'Save Single Scan Report (PDF)',
+            fileName: fileName,
+            type: FileType.custom,
+            allowedExtensions: ['pdf'],
+          );
+          if (savePath == null) return null;
+          final file = File(savePath);
           await file.writeAsBytes(await pdfDoc.save(), flush: true);
           return file.path;
         } catch (_) {
